@@ -119,5 +119,26 @@ namespace CoreEscuela
                 c.Alumnos = GenerarAlumnosAlAzar(cantRandom);
             }
         }
+
+        public List<ObjetoEscuelaBase> GetObjetoEscuelas()
+        {
+            var Temp = new List<ObjetoEscuelaBase>();
+            Temp.Add(Escuela);
+            Temp.AddRange(Escuela.Cursos);
+
+            foreach (var Cursoi in Escuela.Cursos)
+            {
+                Temp.AddRange(Cursoi.Asignaturas);
+                Temp.AddRange(Cursoi.Alumnos);
+
+                foreach (var Alumnoi in Cursoi.Alumnos)
+                {
+                    Temp.AddRange(Alumnoi.Evaluaciones);
+                }
+            }
+
+            return Temp;
+        }
+
     }
 }

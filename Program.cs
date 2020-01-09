@@ -15,7 +15,26 @@ namespace CoreEscuela
             Printer.WriteTitle("BIENVENIDOS A LA ESCUELA");
             //Printer.Beep(10000, cantidad: 10);
             ImpimirCursosEscuela(engine.Escuela);
-            var listaObjetos = engine.GetObjetosEscuela();
+            var ListaObjetos=engine.GetObjetoEscuelas();
+
+            // Printer.DrawLine(20);
+            // Printer.DrawLine(20);
+            // Printer.DrawLine(20);
+            // Printer.WriteTitle("Pruebas de poliformismo");
+
+            // var Alumno_Test = new Alumno { Nombre = "Pepito Perez" };
+            // ObjetoEscuelaBase objeto = Alumno_Test;
+
+            // Printer.WriteTitle("Alumno_or");
+            // WriteLine($"Alumno: {Alumno_Test.Nombre}");
+            // WriteLine($"Alumno: {Alumno_Test.UniqueId}");
+            // WriteLine($"Alumno: {Alumno_Test.GetType()}");
+
+            // Printer.WriteTitle("Alumno_pol");
+            // WriteLine($"Alumno: {objeto.Nombre}");
+            // WriteLine($"Alumno: {objeto.UniqueId}");
+            // WriteLine($"Alumno: {objeto.GetType()}");
+            // var listaObjetos = engine.GetObjetosEscuela();
         }
 
         private static void ImpimirCursosEscuela(Escuela escuela)
