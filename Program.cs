@@ -17,6 +17,8 @@ namespace CoreEscuela
             ImpimirCursosEscuela(engine.Escuela);
             var ListaObjetos=engine.GetObjetoEscuelas();
 
+
+
             // Printer.DrawLine(20);
             // Printer.DrawLine(20);
             // Printer.DrawLine(20);

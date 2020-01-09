@@ -16,5 +16,7 @@ namespace CoreEscuela.Entidades
         {
             return $"{Nombre},{UniqueId}";
         }
+
+        
     }
 }

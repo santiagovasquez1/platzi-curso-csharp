@@ -26,6 +26,8 @@ namespace CoreEscuela
 
         }
 
+        #region  Cargar
+
         private void CargarEvaluaciones()
         {
 
@@ -54,26 +56,6 @@ namespace CoreEscuela
 
         }
 
-        public List<ObjetoEscuelaBase> GetObjetosEscuela()
-        {
-            var listaObj = new List<ObjetoEscuelaBase>();
-            listaObj.Add(Escuela);
-            listaObj.AddRange(Escuela.Cursos);
-
-            foreach (var curso in Escuela.Cursos)
-            {
-                listaObj.AddRange(curso.Asignaturas);
-                listaObj.AddRange(curso.Alumnos);
-
-                foreach (var alumno in curso.Alumnos)
-                {
-                    listaObj.AddRange(alumno.Evaluaciones);
-                }
-            }
-
-            return listaObj;
-        }
-
         private void CargarAsignaturas()
         {
             foreach (var curso in Escuela.Cursos)
@@ -86,20 +68,6 @@ namespace CoreEscuela
                 };
                 curso.Asignaturas = listaAsignaturas;
             }
-        }
-
-        private List<Alumno> GenerarAlumnosAlAzar(int cantidad)
-        {
-            string[] nombre1 = { "Alba", "Felipa", "Eusebio", "Farid", "Donald", "Alvaro", "Nicolás" };
-            string[] apellido1 = { "Ruiz", "Sarmiento", "Uribe", "Maduro", "Trump", "Toledo", "Herrera" };
-            string[] nombre2 = { "Freddy", "Anabel", "Rick", "Murty", "Silvana", "Diomedes", "Nicomedes", "Teodoro" };
-
-            var listaAlumnos = from n1 in nombre1
-                               from n2 in nombre2
-                               from a1 in apellido1
-                               select new Alumno { Nombre = $"{n1} {n2} {a1}" };
-
-            return listaAlumnos.OrderBy((al) => al.UniqueId).Take(cantidad).ToList();
         }
 
         private void CargarCursos()
@@ -119,6 +87,68 @@ namespace CoreEscuela
                 c.Alumnos = GenerarAlumnosAlAzar(cantRandom);
             }
         }
+        #endregion
+
+        public List<ObjetoEscuelaBase> GetObjetosEscuela(
+            out int Conteo_Evaluaciones,
+            out int Conteo_Alumnos,
+            out int Conteo_Asignaturas,
+            out int Conteo_Cursos,
+            bool Trae_Evaluciacones = true,
+            bool Trae_Alumnos = true,
+            bool Trae_Asignaturas = true,
+            bool Trae_Curos = true)
+        {
+            var listaObj = new List<ObjetoEscuelaBase>();
+
+            Conteo_Evaluaciones = 0;
+            Conteo_Asignaturas = 0;
+            Conteo_Alumnos = 0;
+            listaObj.Add(Escuela);
+
+            if (Trae_Curos)
+                listaObj.AddRange(Escuela.Cursos);
+            Conteo_Cursos = Escuela.Cursos.Count;
+
+            foreach (var curso in Escuela.Cursos)
+            {
+                Conteo_Asignaturas += curso.Asignaturas.Count;
+                Conteo_Alumnos += curso.Alumnos.Count;
+
+                if (Trae_Asignaturas)
+                    listaObj.AddRange(curso.Asignaturas);
+                if (Trae_Alumnos)
+                    listaObj.AddRange(curso.Alumnos);
+
+                if (Trae_Evaluciacones == true)
+                {
+                    foreach (var alumno in curso.Alumnos)
+                    {
+                        listaObj.AddRange(alumno.Evaluaciones);
+                        Conteo_Evaluaciones++;
+                    }
+                }
+
+            }
+
+            return listaObj;
+        }
+
+
+        private List<Alumno> GenerarAlumnosAlAzar(int cantidad)
+        {
+            string[] nombre1 = { "Alba", "Felipa", "Eusebio", "Farid", "Donald", "Alvaro", "Nicolás" };
+            string[] apellido1 = { "Ruiz", "Sarmiento", "Uribe", "Maduro", "Trump", "Toledo", "Herrera" };
+            string[] nombre2 = { "Freddy", "Anabel", "Rick", "Murty", "Silvana", "Diomedes", "Nicomedes", "Teodoro" };
+
+            var listaAlumnos = from n1 in nombre1
+                               from n2 in nombre2
+                               from a1 in apellido1
+                               select new Alumno { Nombre = $"{n1} {n2} {a1}" };
+
+            return listaAlumnos.OrderBy((al) => al.UniqueId).Take(cantidad).ToList();
+        }
+
 
         public List<ObjetoEscuelaBase> GetObjetoEscuelas()
         {
