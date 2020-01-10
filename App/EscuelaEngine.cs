@@ -188,6 +188,16 @@ namespace CoreEscuela
 
             return Diccionario;
         }
+        public void ImprimirDiccionario(Dictionary<Llaves_Diccionario, IEnumerable<ObjetoEscuelaBase>> Dic)
+        {
+            foreach (var obj in Dic)
+            {
 
+                Console.WriteLine(obj.Key.ToString());
+
+                foreach (var val in obj.Value)
+                    Console.WriteLine(val);
+            }
+        }
     }
 }

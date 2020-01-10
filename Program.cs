@@ -20,9 +20,8 @@ namespace CoreEscuela
             out int Conteo_Asignaturas,
             out int Conteo_Cursos);
 
-            IEnumerable<ObjetoEscuelaBase> Temp = new List<ObjetoEscuelaBase>();
-            engine.GetDiccionarioObjetos();
-
+            var DicTemp = engine.GetDiccionarioObjetos();
+            engine.ImprimirDiccionario(DicTemp);
             // Dictionary<int, string> Diccionario = new Dictionary<int, string>();
             // Diccionario.Add(10, "Juan");
             // Diccionario.Add(23, "Lorem impsum");
