@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CoreEscuela.Entidades;
+using platzi_curso_csharp.Entidades;
 
 namespace CoreEscuela
 {
@@ -89,7 +90,9 @@ namespace CoreEscuela
         }
         #endregion
 
-        public List<ObjetoEscuelaBase> GetObjetosEscuela(
+
+
+        public IReadOnlyList<ObjetoEscuelaBase> GetObjetosEscuela(
             out int Conteo_Evaluaciones,
             out int Conteo_Alumnos,
             out int Conteo_Asignaturas,
@@ -131,9 +134,17 @@ namespace CoreEscuela
 
             }
 
-            return listaObj;
+            return listaObj.AsReadOnly();
         }
 
+        //Sobrecarga de metodos
+        public IReadOnlyList<ObjetoEscuelaBase> GetObjetosEscuela(bool Trae_Evaluciacones = true,
+            bool Trae_Alumnos = true,
+            bool Trae_Asignaturas = true,
+            bool Trae_Curos = true)
+        {
+            return GetObjetosEscuela(out int dummy, out dummy, out dummy, out dummy);
+        }
 
         private List<Alumno> GenerarAlumnosAlAzar(int cantidad)
         {
@@ -149,25 +160,33 @@ namespace CoreEscuela
             return listaAlumnos.OrderBy((al) => al.UniqueId).Take(cantidad).ToList();
         }
 
-
-        public List<ObjetoEscuelaBase> GetObjetoEscuelas()
+        public Dictionary<Llaves_Diccionario, IEnumerable<ObjetoEscuelaBase>> GetDiccionarioObjetos()
         {
-            var Temp = new List<ObjetoEscuelaBase>();
-            Temp.Add(Escuela);
-            Temp.AddRange(Escuela.Cursos);
+            var Diccionario = new Dictionary<Llaves_Diccionario, IEnumerable<ObjetoEscuelaBase>>();
 
-            foreach (var Cursoi in Escuela.Cursos)
+            Diccionario.Add(Llaves_Diccionario.Escuela, new[] { Escuela });
+            Diccionario.Add(Llaves_Diccionario.Cursos, Escuela.Cursos);
+
+            var Alumnos_Totales = new List<Alumno>();
+            var Asignaturas_Totales = new List<Asignatura>();
+            var Evaluaciones_Totales = new List<Evaluación>();
+
+            foreach (var Listai in Escuela.Cursos)
             {
-                Temp.AddRange(Cursoi.Asignaturas);
-                Temp.AddRange(Cursoi.Alumnos);
-
-                foreach (var Alumnoi in Cursoi.Alumnos)
+                foreach (var Alumnoi in Listai.Alumnos)
                 {
-                    Temp.AddRange(Alumnoi.Evaluaciones);
+                    Alumnos_Totales.Add(Alumnoi);
+                    Evaluaciones_Totales.AddRange(Alumnoi.Evaluaciones);
                 }
+
+                Asignaturas_Totales.AddRange(Listai.Asignaturas);
             }
 
-            return Temp;
+            Diccionario.Add(Llaves_Diccionario.Alumnos, Alumnos_Totales);
+            Diccionario.Add(Llaves_Diccionario.Asignaturas, Asignaturas_Totales);
+            Diccionario.Add(Llaves_Diccionario.Evaluaciones, Evaluaciones_Totales);
+
+            return Diccionario;
         }
 
     }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CoreEscuela.Entidades;
 using CoreEscuela.Util;
+using platzi_curso_csharp.Entidades;
 using static System.Console;
 
 namespace CoreEscuela
@@ -15,10 +15,27 @@ namespace CoreEscuela
             Printer.WriteTitle("BIENVENIDOS A LA ESCUELA");
             //Printer.Beep(10000, cantidad: 10);
             ImpimirCursosEscuela(engine.Escuela);
-            var ListaObjetos=engine.GetObjetoEscuelas();
+            var ListaObjetos = engine.GetObjetosEscuela(out int Conteo_Evaluaciones,
+            out int Conteo_Alumnos,
+            out int Conteo_Asignaturas,
+            out int Conteo_Cursos);
+
+            IEnumerable<ObjetoEscuelaBase> Temp = new List<ObjetoEscuelaBase>();
+            engine.GetDiccionarioObjetos();
+
+            // Dictionary<int, string> Diccionario = new Dictionary<int, string>();
+            // Diccionario.Add(10, "Juan");
+            // Diccionario.Add(23, "Lorem impsum");
 
 
+            // foreach (var llaveValor in Diccionario)
+            // {
+            //     WriteLine(llaveValor.Value);
+            //     WriteLine(llaveValor.Key);
+            // }
 
+            // Printer.WriteTitle("Acceso a diccionario");
+            // WriteLine(Diccionario[10]);
             // Printer.DrawLine(20);
             // Printer.DrawLine(20);
             // Printer.DrawLine(20);
