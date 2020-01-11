@@ -27,7 +27,6 @@ namespace CoreEscuela
             Printer.WriteTitle("Captura evaluación por consola");
 
             string Nombre, notaString;
-            float Nota;
             var newEval = new Evaluación();
 
             WriteLine("Ingrese el nombre de la evaluación:");
@@ -63,6 +62,7 @@ namespace CoreEscuela
                         throw new ArgumentOutOfRangeException("La nota debe de estar entre 0 y 5");
                     }
                     WriteLine("la nota de la evaluación ha sido ingresado correctamente.");
+                    return;
                 }
                 catch (ArgumentOutOfRangeException arge)
                 {
@@ -73,6 +73,11 @@ namespace CoreEscuela
                 {
                     Printer.WriteTitle("El valor de la nota no es un número valido");
                     WriteLine("Saliendo del programa");
+                }
+                finally
+                {
+                    Printer.WriteTitle("FINALLY");
+                    Printer.Beep(2500, 500, 3);
                 }
             }
 
