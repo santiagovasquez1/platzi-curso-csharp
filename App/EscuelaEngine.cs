@@ -1,10 +1,10 @@
+using CoreEscuela.Entidades;
+using platzi_curso_csharp.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoreEscuela.Entidades;
-using platzi_curso_csharp.Entidades;
 
-namespace CoreEscuela
+namespace CoreEscuela.App
 {
     public sealed class EscuelaEngine
     {
@@ -12,7 +12,6 @@ namespace CoreEscuela
 
         public EscuelaEngine()
         {
-
         }
 
         public void Inicializar()
@@ -24,29 +23,26 @@ namespace CoreEscuela
             CargarCursos();
             CargarAsignaturas();
             CargarEvaluaciones();
-
         }
 
-        #region  Cargar
+        #region Cargar
 
         private void CargarEvaluaciones()
         {
-
+            var rnd = new Random();
             foreach (var curso in Escuela.Cursos)
             {
                 foreach (var asignatura in curso.Asignaturas)
                 {
                     foreach (var alumno in curso.Alumnos)
                     {
-                        var rnd = new Random(System.Environment.TickCount);
-
                         for (int i = 0; i < 5; i++)
                         {
                             var ev = new Evaluación
                             {
                                 Asignatura = asignatura,
                                 Nombre = $"{asignatura.Nombre} Ev#{i + 1}",
-                                Nota = (float)(5 * rnd.NextDouble()),
+                                Nota = (float)Math.Round((5 * rnd.NextDouble()), 2),
                                 Alumno = alumno
                             };
                             alumno.Evaluaciones.Add(ev);
@@ -54,7 +50,6 @@ namespace CoreEscuela
                     }
                 }
             }
-
         }
 
         private void CargarAsignaturas()
@@ -88,9 +83,8 @@ namespace CoreEscuela
                 c.Alumnos = GenerarAlumnosAlAzar(cantRandom);
             }
         }
-        #endregion
 
-
+        #endregion Cargar
 
         public IReadOnlyList<ObjetoEscuelaBase> GetObjetosEscuela(
             out int Conteo_Evaluaciones,
@@ -131,7 +125,6 @@ namespace CoreEscuela
                         Conteo_Evaluaciones++;
                     }
                 }
-
             }
 
             return listaObj.AsReadOnly();
@@ -188,15 +181,43 @@ namespace CoreEscuela
 
             return Diccionario;
         }
-        public void ImprimirDiccionario(Dictionary<Llaves_Diccionario, IEnumerable<ObjetoEscuelaBase>> Dic)
+
+        public void ImprimirDiccionario(Dictionary<Llaves_Diccionario, IEnumerable<ObjetoEscuelaBase>> Dic, bool imprimirEval = false)
         {
-            foreach (var obj in Dic)
+            foreach (var llave in Dic)
             {
+                Console.WriteLine(llave.Key.ToString());
 
-                Console.WriteLine(obj.Key.ToString());
+                foreach (var val in llave.Value)
+                {
+                    switch (llave.Key)
+                    {
+                        case Llaves_Diccionario.Evaluaciones:
+                            if (imprimirEval)
+                            {
+                                Console.WriteLine(val);
+                            }
+                            break;
 
-                foreach (var val in obj.Value)
-                    Console.WriteLine(val);
+                        case Llaves_Diccionario.Escuela:
+                            Console.WriteLine("Escuela: " + val);
+                            break;
+
+                        case Llaves_Diccionario.Alumnos:
+                            Console.WriteLine("Alumno: " + val.Nombre);
+                            break;
+
+                        case Llaves_Diccionario.Cursos:
+                            var CursoTemp = val as Curso;
+                            if (CursoTemp != null)
+                                Console.WriteLine("Curos: " + CursoTemp.Nombre + " Cantidad Alumnos: " + CursoTemp.Alumnos.Count);
+                            break;
+
+                        default:
+                            Console.WriteLine(val);
+                            break;
+                    }
+                }
             }
         }
     }

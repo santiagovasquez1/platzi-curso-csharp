@@ -8,6 +8,7 @@ namespace platzi_curso_csharp.Entidades
         Escuela,
         Evaluaciones
     }
+
     // public struct Llaves_Diccionario
     // {
     //     public const string CURSOS = "Cursos";

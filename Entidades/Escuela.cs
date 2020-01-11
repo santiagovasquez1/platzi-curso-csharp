@@ -1,6 +1,6 @@
+using CoreEscuela.Util;
 using System;
 using System.Collections.Generic;
-using CoreEscuela.Util;
 
 namespace CoreEscuela.Entidades
 {
@@ -25,7 +25,6 @@ namespace CoreEscuela.Entidades
             Pais = pais;
             Ciudad = ciudad;
         }
-
 
         public override string ToString()
         {

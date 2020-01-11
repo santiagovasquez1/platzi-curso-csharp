@@ -1,31 +1,103 @@
-﻿using System.Collections.Generic;
+﻿using CoreEscuela.App;
 using CoreEscuela.Entidades;
 using CoreEscuela.Util;
-using platzi_curso_csharp.Entidades;
+using System;
 using static System.Console;
 
 namespace CoreEscuela
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.ProcessExit += AccionDelEvento;
+            //AppDomain.CurrentDomain.ProcessExit += (o, s) => Printer.Beep(1000, 1000, 1);
+            //AppDomain.CurrentDomain.ProcessExit -= AccionDelEvento;
+
             var engine = new EscuelaEngine();
             engine.Inicializar();
             Printer.WriteTitle("BIENVENIDOS A LA ESCUELA");
-            //Printer.Beep(10000, cantidad: 10);
-            ImpimirCursosEscuela(engine.Escuela);
-            var ListaObjetos = engine.GetObjetosEscuela(out int Conteo_Evaluaciones,
-            out int Conteo_Alumnos,
-            out int Conteo_Asignaturas,
-            out int Conteo_Cursos);
 
-            var DicTemp = engine.GetDiccionarioObjetos();
-            engine.ImprimirDiccionario(DicTemp);
+            var reporteador = new Reporteador(engine.GetDiccionarioObjetos());
+            var EvalList = reporteador.GetListaEvaluaciones();
+            var AsignaturaList = reporteador.GetListAsignaturas();
+            var DicEval = reporteador.GetDicEvaluacionesPorAsignatura();
+            var ListaPromXAsignatura = reporteador.GetPromedioAlumnosPorAsignatura();
+
+            Printer.WriteTitle("Captura evaluación por consola");
+
+            string Nombre, notaString;
+            float Nota;
+            var newEval = new Evaluación();
+
+            WriteLine("Ingrese el nombre de la evaluación:");
+            Printer.PresioneENTER();
+            Nombre = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Nombre))
+            {
+                Printer.WriteTitle("El valor del nombre no puede ser vacio");
+                WriteLine("Saliendo del programa");
+
+            }
+            else
+            {
+                newEval.Nombre = Nombre.ToLower();
+                WriteLine("El nombre de la evaluación ha sido ingresado correctamente.");
+            }
+
+            WriteLine("Ingrese la nota de la evaluación:");
+            Printer.PresioneENTER();
+            notaString = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(notaString))
+            {
+                Printer.WriteTitle("El valor de la nota no puede ser vacio");
+                WriteLine("Saliendo del programa");
+            }
+            else
+            {
+                try
+                {
+                    newEval.Nota = float.Parse(notaString);
+                    if (newEval.Nota < 0 | newEval.Nota > 5)
+                    {
+                        throw new ArgumentOutOfRangeException("La nota debe de estar entre 0 y 5");
+                    }
+                    WriteLine("la nota de la evaluación ha sido ingresado correctamente.");
+                }
+                catch (ArgumentOutOfRangeException arge)
+                {
+                    Printer.WriteTitle(arge.Message);
+                    WriteLine("Saliendo del programa");
+                }
+                catch (Exception)
+                {
+                    Printer.WriteTitle("El valor de la nota no es un número valido");
+                    WriteLine("Saliendo del programa");
+                }
+            }
+
+
+            // foreach (var item in ListaPromXAsignatura)
+            // {
+            //     foreach (var alumn in item.Value)
+            //     {
+            //         var temp = alumn as Alumno;
+
+            //     }
+            // }
+
+            //Printer.Beep(10000, cantidad: 10);
+            // ImpimirCursosEscuela(engine.Escuela);
+            // var ListaObjetos = engine.GetObjetosEscuela(out int Conteo_Evaluaciones,
+            // out int Conteo_Alumnos,
+            // out int Conteo_Asignaturas,
+            // out int Conteo_Cursos);
+
+            // var DicTemp = engine.GetDiccionarioObjetos();
+            // engine.ImprimirDiccionario(DicTemp, true);
             // Dictionary<int, string> Diccionario = new Dictionary<int, string>();
             // Diccionario.Add(10, "Juan");
             // Diccionario.Add(23, "Lorem impsum");
-
 
             // foreach (var llaveValor in Diccionario)
             // {
@@ -55,11 +127,16 @@ namespace CoreEscuela
             // var listaObjetos = engine.GetObjetosEscuela();
         }
 
+        private static void AccionDelEvento(object sender, EventArgs e)
+        {
+            Printer.WriteTitle("Saliendo");
+            //Printer.Beep(3000, 1000, 3);
+            Printer.WriteTitle("SALIO");
+        }
+
         private static void ImpimirCursosEscuela(Escuela escuela)
         {
-
             Printer.WriteTitle("Cursos de la Escuela");
-
 
             if (escuela?.Cursos != null)
             {
